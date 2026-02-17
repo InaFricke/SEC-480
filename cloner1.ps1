@@ -53,10 +53,10 @@ if (-not $vm) {
 Write-Host "Available Snapshots for $SourceVM:"
 Get-Snapshot -VM $vm | Select-Object -ExpandProperty Name
 
-$SnapshotName = Read-Host "Enter Snapshot Name (Press Enter for 'Base')"
+$SnapshotName = Read-Host "Enter Snapshot Name (Press Enter for 'baseline')"
 
 if (-not $SnapshotName) {
-    $SnapshotName = "Base"
+    $SnapshotName = "baseline"
 }
 
 $snapshot = Get-Snapshot -VM $vm -Name $SnapshotName -ErrorAction SilentlyContinue
@@ -69,7 +69,7 @@ if (-not $snapshot) {
 
 # ESXi Host selection
 Write-Host "Available ESXi Hosts:"
-Get-VMHost | Select-Object Name
+Get-VMHost | Select-Object -ExpandProperty Name
 
 $VMHostName = Read-Host "Enter ESXi Host Name"
 
@@ -77,7 +77,7 @@ $vmhost = Get-VMHost -Name $VMHostName -ErrorAction SilentlyContinue
 
 if (-not $vmhost) {
     Write-Host "Invalid ESXi host. Available hosts:" 
-    Get-VMHost | Select-Object Name
+    Get-VMHost | Select-Object -ExpandProperty Name
     return
 }
 
@@ -135,8 +135,8 @@ if ($cloneType -eq "1") {
            -VMHost $vmhost `
            -Datastore $ds `
            -LinkedClone
-    New-Snapshot -VM $newVM -Name "baseline" -Description "Initial snapshot."
-    Write-Host "Linked clone '$CloneName' created successfully with new snapshot named baseline."
+    Get-NetworkAdapter -VM $newVM | Set-NetworkAdapter -NetworkName $NetworkName -Confirm:$false
+    Write-Host "Linked clone '$CloneName' created successfully."
 }
 
 
@@ -149,11 +149,13 @@ if ($cloneType -eq "2") {
                      -VMHost $vmhost `
                      -Datastore $ds `
                      -LinkedClone
-
+   
     $newVM = New-VM -Name $CloneName `
            -VM $tempVM `
            -VMHost $vmhost `
            -Datastore $ds
+    Get-NetworkAdapter -VM $newVM | Set-NetworkAdapter -NetworkName $NetworkName -Confirm:$false
+     
     Remove-VM -VM $tempVM -DeletePermanently -Confirm:$false
     New-Snapshot -VM $newVM -Name "baseline" -Description "Initial snapshot"
     Write-Host "Full clone '$CloneName' created successfully with new snapshot named baseline." 
