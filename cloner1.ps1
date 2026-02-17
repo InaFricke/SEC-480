@@ -59,7 +59,7 @@ if (-not $SnapshotName) {
     $SnapshotName = "baseline"
 }
 
-$snapshot = Get-Snapshot -VM $vm -Name $SnapshotName -ErrorAction SilentlyContinue
+$snapshot = Get-Snapshot -VM $vm -Name $SnapshotName -ErrorAction SilentlyContinue | Select-Object -First 1
 
 if (-not $snapshot) {
     Write-Host "Invalid snapshot name. Available snapshots:" 
