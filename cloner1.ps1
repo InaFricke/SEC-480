@@ -83,7 +83,7 @@ if (-not $vmhost) {
 
 # Datastore selection
 Write-Host "Available Datastores:"
-Get-Datastore | Select-Object Name
+Get-Datastore | Select-Object -ExpandProperty Name
 
 $DatastoreName = Read-Host "Enter Datastore Name"
 
@@ -97,7 +97,7 @@ if (-not $ds) {
 
 # Network selection
 Write-Host "Available Networks:"
-Get-VirtualPortGroup | Select-Object Name
+Get-VirtualPortGroup | Select-Object -ExpandProperty Name
 
 $NetworkName = Read-Host "Enter Network Name"
 
