@@ -128,32 +128,33 @@ if ($existingVM) {
 # Create the clone
 
 if ($cloneType -eq "1") {
-    # Linked clone
-    New-VM -Name $CloneName `
+# Linked clone
+    $newVM = New-VM -Name $CloneName `
            -VM $vm `
-           -Snapshot $snapshot `
+           -ReferenceSnapshot $snapshot `
            -VMHost $vmhost `
            -Datastore $ds `
            -LinkedClone
-    Write-Host "Linked clone '$CloneName' created successfully."
+    New-Snapshot -VM $newVM -Name "baseline" -Description "Initial snapshot."
+    Write-Host "Linked clone '$CloneName' created successfully with new snapshot named baseline."
 }
 
 
 if ($cloneType -eq "2") {
-    # Full clone - create temp linked clone first, then clone from it
+# Full clone - create temp linked clone first, then clone from it
     $tempName = "$CloneName-temp"
     $tempVM = New-VM -Name $tempName `
                      -VM $vm `
-                     -Snapshot $snapshot `
+                     -ReferenceSnapshot $snapshot `
                      -VMHost $vmhost `
                      -Datastore $ds `
                      -LinkedClone
 
-    New-VM -Name $CloneName `
+    $newVM = New-VM -Name $CloneName `
            -VM $tempVM `
            -VMHost $vmhost `
            -Datastore $ds
-
     Remove-VM -VM $tempVM -DeletePermanently -Confirm:$false
-    Write-Host "Full clone '$CloneName' created successfully." 
+    New-Snapshot -VM $newVM -Name "baseline" -Description "Initial snapshot"
+    Write-Host "Full clone '$CloneName' created successfully with new snapshot named baseline." 
 }
