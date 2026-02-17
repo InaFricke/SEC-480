@@ -7,10 +7,10 @@ do {
     try {
         Connect-VIServer -Server $vcenter -ErrorAction Stop | Out-Null
         $connected = $true
-        Write-Host "Connected successfully to $vcenter" -ForegroundColor Green
+        Write-Host "Connected successfully to $vcenter" 
     }
     catch {
-        Write-Host "Connection failed. Please try again." -ForegroundColor Red
+        Write-Host "Connection failed. Please try again." 
         $connected = $false
     }
 
@@ -34,4 +34,50 @@ if ($cloneType -eq "2") {
     Write-Host "You are creating a Full Clone." 
 }
 
+# Select source VM to clone
+
+Write-Host "Choose target source VM from options below:" 
+Get-VM | Select-Object -ExpandProperty Name
+
+$SourceVM = Read-Host "Enter Source VM Name"
+
+$vm = Get-VM -Name $SourceVM -ErrorAction SilentlyContinue
+
+if (-not $vm) {
+    Write-Host "Invalid VM name. Available VMs:" 
+    Get-VM | Select-Object Name
+    return
+}
+
+# Select snapshot 
+Write-Host "Available Snapshots for $SourceVM:"
+Get-Snapshot -VM $vm | Select-Object -ExpandProperty Name
+
+$SnapshotName = Read-Host "Enter Snapshot Name (Press Enter for 'Base')"
+
+if (-not $SnapshotName) {
+    $SnapshotName = "Base"
+}
+
+$snapshot = Get-Snapshot -VM $vm -Name $SnapshotName -ErrorAction SilentlyContinue
+
+if (-not $snapshot) {
+    Write-Host "Invalid snapshot name. Available snapshots:" 
+    Get-Snapshot -VM $vm | Select-Object -ExpandProperty Name
+    return
+}
+
+# ESXi Host selection
+Write-Host "Available ESXi Hosts:"
+Get-VMHost | Select-Object Name
+
+$VMHostName = Read-Host "Enter ESXi Host Name"
+
+$vmhost = Get-VMHost -Name $VMHostName -ErrorAction SilentlyContinue
+
+if (-not $vmhost) {
+    Write-Host "Invalid ESXi host. Available hosts:" 
+    Get-VMHost | Select-Object Name
+    return
+}
 
