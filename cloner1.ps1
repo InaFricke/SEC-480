@@ -81,3 +81,45 @@ if (-not $vmhost) {
     return
 }
 
+# Datastore selection
+Write-Host "Available Datastores:"
+Get-Datastore | Select-Object Name
+$DatastoreName = Read-Host "Enter Datastore Name"
+
+$ds = Get-Datastore -Name $DatastoreName -ErrorAction SilentlyContinue
+
+if (-not $ds) {
+    Write-Host "Invalid datastore. Available datastores:"
+    Get-Datastore | Select-Object Name
+    return
+}
+
+# Network selection
+Write-Host "Available Networks"
+Get-VirtualPortGroup | Select-Object Name
+
+$NetworkName = Read-Host "Enter Network Name"
+
+$network = Get-VirtualPortGroup -Name $NetworkName -ErrorAction SilentlyContinue
+
+if (-not $network) {
+    Write-Host "Invalid network. Available networks:" 
+    Get-VirtualPortGroup | Select-Object Name
+    return
+}
+
+# Clone Name + redundancy check
+
+$CloneName = Read-Host "Enter Name of New Clone"
+
+if (-not $CloneName) {
+    Write-Host "Clone name cannot be blank." 
+    return
+}
+
+$existingVM = Get-VM -Name $CloneName -ErrorAction SilentlyContinue
+
+if ($existingVM) {
+    Write-Host "A VM with this name already exists. Please choose a different name." 
+    return
+}
