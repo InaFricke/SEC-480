@@ -1,44 +1,37 @@
-# Propmt for variables
 
-$SourceVM = Read-Host "Enter source VM Name"
-$SnapshotName = Read-Host "baseline"
-$VMHostName = Read-Host "Enter VMHost name"
-$DatastoreName = Read-Host "datastore2"
-$FullCloneName = Read-Host "Enter name of full clone"
+#Connect to vcenter and validate it works
 
-#Connect
-Connect-VIServer -Server $vcenter
+do {
+    $vcenter = Read-Host "Enter vCenter Server"
 
-# Choose source vm
-$vm = Get-VM -Name $SourceVM
-$snapshot = Get-Snapshot -VM $vm -Name $SnapshotName
-$vmhost = Get-VMHost -Name $VMHostName
-$ds = Get-Datastore -Name $DatastoreName
+    try {
+        Connect-VIServer -Server $vcenter -ErrorAction Stop | Out-Null
+        $connected = $true
+        Write-Host "Connected successfully to $vcenter" -ForegroundColor Green
+    }
+    catch {
+        Write-Host "Connection failed. Please try again." -ForegroundColor Red
+        $connected = $false
+    }
 
-# Linked Clone Name
+} while (-not $connected)
 
-$linkedClone = "{0}.linked" -f $vm.name
+# Select clone type
+Write-Host "Select Clone Type: 1 (Linked clone) 2 (Full clone)
 
-# Creating temp linked clone
+$cloneType = Read-Host "Enter selection 1 or 2"
 
-$linkedvm = New-VM `
-	-LinkedClone `
-	-Name $linkedClone `
-	-VM $vm `
-	-ReferenceSnapshot $snapshot `
-	-VMHost $vmhost `
-	-Datastore $ds `
+if ($cloneType -ne "1" -and $cloneType -ne "2") {
+    Write-Host "Invalid selection. Please run the script again and select 1 or 2."
+    return
+}
 
-# Create seperate clone
-$newvm = New-VM `
-	-Name $FullCloneName `
-	-VM $linkedvm `
-	-VMHost $vmhost `
-	-Datastore $ds `
+if ($cloneType -eq "1") {
+    Write-Host "You are creating a Linked Clone." 
+}
 
-# Snapshot full clone
-$newvm | New-Snapshot -Name $SnapshotName
+if ($cloneType -eq "2") {
+    Write-Host "You are creating a Full Clone." 
+}
 
-# Remove Temp linked clone
 
-$linkedvm | Remove-VM -DeletePermanently -Confirm:$false
