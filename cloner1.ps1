@@ -50,7 +50,7 @@ if (-not $vm) {
 }
 
 # Select snapshot 
-Write-Host "Available Snapshots for $SourceVM:"
+Write-Host "Available Snapshots for $SourceVM"
 Get-Snapshot -VM $vm | Select-Object -ExpandProperty Name
 
 $SnapshotName = Read-Host "Enter Snapshot Name (Press Enter for 'baseline')"
@@ -84,6 +84,7 @@ if (-not $vmhost) {
 # Datastore selection
 Write-Host "Available Datastores:"
 Get-Datastore | Select-Object Name
+
 $DatastoreName = Read-Host "Enter Datastore Name"
 
 $ds = Get-Datastore -Name $DatastoreName -ErrorAction SilentlyContinue
@@ -95,7 +96,7 @@ if (-not $ds) {
 }
 
 # Network selection
-Write-Host "Available Networks"
+Write-Host "Available Networks:"
 Get-VirtualPortGroup | Select-Object Name
 
 $NetworkName = Read-Host "Enter Network Name"
