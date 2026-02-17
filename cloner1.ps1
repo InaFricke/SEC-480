@@ -1,5 +1,6 @@
 
 #Connect to vcenter and validate it works
+Disconnect-VIServer -Server * -Force -Confirm:$false
 
 do {
     $vcenter = Read-Host "Enter vCenter Server"
