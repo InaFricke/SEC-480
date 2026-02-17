@@ -17,7 +17,7 @@ do {
 } while (-not $connected)
 
 # Select clone type
-Write-Host "Select Clone Type: 1 (Linked clone) 2 (Full clone)
+Write-Host "Select Clone Type: 1 (Linked clone) 2 (Full clone)"
 
 $cloneType = Read-Host "Enter selection 1 or 2"
 
@@ -122,4 +122,38 @@ $existingVM = Get-VM -Name $CloneName -ErrorAction SilentlyContinue
 if ($existingVM) {
     Write-Host "A VM with this name already exists. Please choose a different name." 
     return
+}
+
+
+# Create the clone
+
+if ($cloneType -eq "1") {
+    # Linked clone
+    New-VM -Name $CloneName `
+           -VM $vm `
+           -Snapshot $snapshot `
+           -VMHost $vmhost `
+           -Datastore $ds `
+           -LinkedClone
+    Write-Host "Linked clone '$CloneName' created successfully."
+}
+
+
+if ($cloneType -eq "2") {
+    # Full clone - create temp linked clone first, then clone from it
+    $tempName = "$CloneName-temp"
+    $tempVM = New-VM -Name $tempName `
+                     -VM $vm `
+                     -Snapshot $snapshot `
+                     -VMHost $vmhost `
+                     -Datastore $ds `
+                     -LinkedClone
+
+    New-VM -Name $CloneName `
+           -VM $tempVM `
+           -VMHost $vmhost `
+           -Datastore $ds
+
+    Remove-VM -VM $tempVM -DeletePermanently -Confirm:$false
+    Write-Host "Full clone '$CloneName' created successfully." 
 }
