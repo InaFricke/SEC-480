@@ -4,10 +4,9 @@
 Import-Module ./480-utils.psm1 -Force
 
 # Connect to vCenter only if not connected
-$vcenter = "vcenter.ina.local"
+Disconnect-VIServer -Server * -Force -Confirm:$false -ErrorAction SilentlyContinue
+Connect-VIServer -Server "vcenter.ina.local" -User "fricke-adm" -Password "RoxiRules32" # Prompts for credentials, if not already connected
 
-if (-not (Get-VIServer -ErrorAction SilentlyContinue)) {
-    Connect-VIServer -Server $vcenter -User "fricke-adm" -Password "RoxiRules32"   # Prompts for credentials, if not already connected
 }
 
 # Define Clone Parameters (Edit these values as needed)
