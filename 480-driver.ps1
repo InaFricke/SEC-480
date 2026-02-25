@@ -7,12 +7,11 @@ Import-Module ./480-utils.psm1 -Force
 Disconnect-VIServer -Server * -Force -Confirm:$false -ErrorAction SilentlyContinue
 Connect-VIServer -Server "vcenter.ina.local" -User "fricke-adm" -Password "RoxiRules32" # Prompts for credentials, if not already connected
 
-}
 
 # Define Clone Parameters (Edit these values as needed)
 
 $CloneType     = "Linked"         # "Linked" or "Full"
-$SourceVM      = "Base-VM"        # target clone
+$SourceVM      = "vyos base"        # target clone
 $SnapshotName  = "baseline"       # Always baseline
 $VMHostName    = "192.168.3.208"  # 192.168.3.208
 $DatastoreName = "datastore2"     # Always datastore2

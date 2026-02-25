@@ -32,3 +32,4 @@ $linkedvm = New-VM `
 # Join WAN
 
 Get-NetworkAdapter -VM $linkedvm | Set-NetworkAdapter -NetworkName $WANNetwork -Confirm:$false
+
