@@ -125,14 +125,14 @@ if (Get-VirtualSwitch -VMHost $vmhost -Name $SwitchName -ErrorAction SilentlyCon
 }
 }
 
-# gets the name, IP, the MAC address
+# gets the  vm name, IPv4 address, and the MAC address
 
 function Get-IP {
 
     param (
         [string]$VMName
     )
-
+    # get vm object
     $vm = Get-VM -Name $VMName -ErrorAction Stop
 
     # Get first network adapter
@@ -140,12 +140,12 @@ function Get-IP {
 
     $mac = $adapter.MacAddress
 
-    # Get first IPv4 addresses only 
+    # Get first IPv4 addresses only (not ipv6)
     
    $ip = $vm.Guest.IPAddress |
       Where-Object { $_ -match '\.' } |
       Select-Object -First 1
-
+    # return structured output
     [PSCustomObject]@{
         VMName = $VMName
         IP     = $ip
