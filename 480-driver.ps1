@@ -27,4 +27,13 @@ New-VMClone `
     -VMHostName $VMHostName `
     -DatastoreName $DatastoreName `
     -NetworkName $NetworkName `
-    -CloneName $CloneName
+    -CloneName $CloneName `
+
+# Create Blue1 Network
+New-Network `
+    -SwitchName "Blue1-Switch" `
+    -PortGroupName "Blue1-Network" `
+    -VMHostName "192.168.3.208"
+
+# Test Get-IP
+Get-IP -VMName "Test-Clone-01"
