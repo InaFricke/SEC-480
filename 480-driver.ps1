@@ -15,8 +15,8 @@ $SourceVM      = "vyos base"        # target clone
 $SnapshotName  = "baseline"       # Always baseline
 $VMHostName    = "192.168.3.208"  # 192.168.3.208
 $DatastoreName = "datastore2"     # Always datastore2
-$NetworkName   = "480-internal"   # for connectivity 480-internal
-$CloneName     = "Test-Clone-01"
+$NetworkName   = "Blue1-Network"   # for network connectivity 
+$CloneName     = "blueX-fw"
 
 # Execute Clone Function
 
@@ -28,12 +28,14 @@ New-VMClone `
     -DatastoreName $DatastoreName `
     -NetworkName $NetworkName `
     -CloneName $CloneName `
-
+<#
 # Create Blue1 Network
-New-Network `
+ New-Network `
     -SwitchName "Blue1-Switch" `
     -PortGroupName "Blue1-Network" `
     -VMHostName "192.168.3.208"
 
 # Test Get-IP
-Get-IP -VMName "Test-Clone-01"
+Get-IP -VMName "Test-Clone-03"
+
+#>
