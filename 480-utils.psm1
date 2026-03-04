@@ -152,6 +152,41 @@ function Get-IP {
         MAC    = $mac
     }
 }
+
+# Function to start a VM by name
+function Start-LabVM {
+
+    param (
+        [string]$VMName
+    )
+
+    # Retrieve VM object
+    $vm = Get-VM -Name $VMName -ErrorAction Stop
+
+    # Start the VM
+    Start-VM -VM $vm -Confirm:$false
+
+    # Return updated VM object
+    return (Get-VM -Name $VMName)
+}
+
+# Function to stop a VM by name
+function Stop-LabVM {
+
+    param (
+        [string]$VMName
+    )
+
+    # Retrieve VM object
+    $vm = Get-VM -Name $VMName -ErrorAction Stop
+
+    # Stop the VM
+    Stop-VM -VM $vm -Confirm:$false
+
+    # Return updated VM object
+    return (Get-VM -Name $VMName)
+}
+
 # Export all functions for use in driver
 
-Export-ModuleMember -Function New-VMClone, New-Network, Get-IP
+Export-ModuleMember -Function New-VMClone, New-Network, Get-IP, Start-LabVM, Stop-LabVM
