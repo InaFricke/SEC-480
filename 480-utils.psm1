@@ -187,6 +187,34 @@ function Stop-LabVM {
     return (Get-VM -Name $VMName)
 }
 
+# Adds a network adapter
+function New-NetworkAdapter {
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]$VM,                  # Name of the VM
+
+        [Parameter(Mandatory = $true)]
+        [string]$NetworkName,         # Target portgroup/network to connect to
+
+        [bool]$StartConnected = $true # Whether the adapter should start connected
+    )
+
+    # Get the VM object
+    $vmObject = Get-VM -Name $VM -ErrorAction Stop
+
+    # Check if the network exists on the host
+    $network = Get-VirtualNetwork -Name $NetworkName -ErrorAction Stop
+
+    # Add the new network adapter
+    $newAdapter = New-NetworkAdapter `
+        -VM $vmObject `
+        -NetworkName $NetworkName `
+        -StartConnected:$StartConnected
+
+    # Return the new adapter object
+    return $newAdapter
+}
+
 #  Sets a specific network adapter on a VM to a new network
 function Set-Network {
 
