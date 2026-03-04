@@ -49,7 +49,7 @@ Start-LabVM -VMName $CloneName
 $adapters = Get-NetworkAdapter -VM $CloneName
 if ($adapters.Count -lt 2) {
     # Add second adapter for adapter 2
-    New-NetworkAdapter -VM $CloneName -NetworkName $Network2 -StartConnected $true
+    New-NetworkAdapter -VM $CloneName -NetworkName $Network2 -StartConnected
 }
 
 # Set networks

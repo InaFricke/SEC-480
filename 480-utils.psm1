@@ -188,7 +188,7 @@ function Stop-LabVM {
 }
 
 # Adds a network adapter
-function New-NetworkAdapter {
+function Add-NetworkAdapter {
     param (
         [Parameter(Mandatory = $true)]
         [string]$VM,                  # Name of the VM
@@ -215,7 +215,7 @@ function New-NetworkAdapter {
     return $newAdapter
 }
 
-#  Sets a specific network adapter on a VM to a new network
+#  Sets a specific network adapter on a VM to a new network 
 function Set-Network {
 
     param (
@@ -249,10 +249,6 @@ function Set-Network {
             Where-Object { $_.Name -eq "Network adapter $AdapterNumber" })
 }
 
-function New-NetworkAdapter {
-    
-}
-
 # Export all functions for use in driver
 
-Export-ModuleMember -Function New-VMClone, New-Network, Get-IP, Start-LabVM, Stop-LabVM, Set-Network
+Export-ModuleMember -Function New-VMClone, New-Network, Get-IP, Start-LabVM, Stop-LabVM, Add-NetworkAdapter, Set-Network
