@@ -221,6 +221,10 @@ function Set-Network {
             Where-Object { $_.Name -eq "Network adapter $AdapterNumber" })
 }
 
+function New-NetworkAdapter {
+    
+}
+
 # Export all functions for use in driver
 
 Export-ModuleMember -Function New-VMClone, New-Network, Get-IP, Start-LabVM, Stop-LabVM, Set-Network

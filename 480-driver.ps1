@@ -16,13 +16,13 @@ $SnapshotName  = "baseline"       # Always baseline
 $VMHostName    = "192.168.3.208"  # 192.168.3.208
 $DatastoreName = "datastore2"     # Always datastore2
 $NetworkName   = "Blue1-Network"   # for network connectivity blue, 480-internal or VM
-$CloneName     = "blueX-fw"
+$CloneName     = "blue8-fw"
 
 $SwitchName    = "Blue1-Switch"
 $PortGroupName = "Blue1-Network"
 
-$Network1       = "Network1"       # Adapter 1 network (VM Network, 480-internal, Managment Network, Blue1-Network)
-$Network2       = "Network2"       # Adapter 2 network
+$Network1       = "Blue1-Network"       # Adapter 1 network (VM Network, 480-internal, Managment Network, Blue1-Network)
+$Network2       = "480-internal"       # Adapter 2 network
 
 # Execute Clone Function
 
@@ -35,13 +35,13 @@ New-VMClone `
     -NetworkName $NetworkName `
     -CloneName $CloneName `
 
-# Create Blue1 Network
+<# Create Blue1 Network
  New-Network `
     -SwitchName "Blue1-Switch" `
     -PortGroupName "Blue1-Network" `
     -VMHostName "192.168.3.208"
 
-
+#>
 # Start VM
 Start-LabVM -VMName $CloneName
 
@@ -50,7 +50,6 @@ $adapters = Get-NetworkAdapter -VM $CloneName
 if ($adapters.Count -lt 2) {
     # Add second adapter for adapter 2
     New-NetworkAdapter -VM $CloneName -NetworkName $Network2 -StartConnected $true
-    Write-Host "Adapter 2 added."
 }
 
 # Set networks
