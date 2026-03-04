@@ -7,7 +7,7 @@ Import-Module ./480-utils.psm1 -Force
 Disconnect-VIServer -Server * -Force -Confirm:$false -ErrorAction SilentlyContinue
 Connect-VIServer -Server "vcenter.ina.local" -User "fricke-adm" -Password "RoxiRules32" # Prompts for credentials, if not already connected
 
-
+<#
 # Define Clone Parameters (Edit these values as needed)
 
 $CloneType     = "Linked"         # "Linked" or "Full"
@@ -28,7 +28,7 @@ New-VMClone `
     -DatastoreName $DatastoreName `
     -NetworkName $NetworkName `
     -CloneName $CloneName `
-<#
+
 # Create Blue1 Network
  New-Network `
     -SwitchName "Blue1-Switch" `
@@ -39,3 +39,10 @@ New-VMClone `
 Get-IP -VMName "Test-Clone-03"
 
 #>
+
+# Start VM
+Start-LabVM -VMName "blue1-fw"
+
+
+# Stop VM
+#Stop-LabVM -VMName "blue1-fw"
