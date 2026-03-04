@@ -164,7 +164,7 @@ function Start-LabVM {
     $vm = Get-VM -Name $VMName -ErrorAction Stop
 
     # Start the VM
-    Start-VM -VM $vm -Confirm:$false
+    Start-VM -VM $vm -Confirm:$false | Out-Null
 
     # Return updated VM object
     return (Get-VM -Name $VMName)
@@ -181,7 +181,7 @@ function Stop-LabVM {
     $vm = Get-VM -Name $VMName -ErrorAction Stop
 
     # Stop the VM
-    Stop-VM -VM $vm -Confirm:$false
+    Stop-VM -VM $vm -Confirm:$false | Out-Null
 
     # Return updated VM object
     return (Get-VM -Name $VMName)
