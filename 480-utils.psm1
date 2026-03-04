@@ -187,6 +187,40 @@ function Stop-LabVM {
     return (Get-VM -Name $VMName)
 }
 
+#  Sets a specific network adapter on a VM to a new network
+function Set-Network {
+
+    param (
+        [string]$VMName,        # Name of VM
+        [int]$AdapterNumber,    # Adapter number (1 = eth0, 2 = eth1, etc.)
+        [string]$NetworkName    # Target network / portgroup
+    )
+
+    # Retrieve VM object
+    $vm = Get-VM -Name $VMName -ErrorAction Stop
+
+    # Retrieve target network object (ensures it exists)
+    $network = Get-VirtualNetwork -Name $NetworkName -ErrorAction Stop
+
+    # Retrieve specific network adapter
+    $adapter = Get-NetworkAdapter -VM $vm |
+               Where-Object { $_.Name -eq "Network adapter $AdapterNumber" }
+
+    if (-not $adapter) {
+        throw "Network adapter $AdapterNumber not found on VM '$VMName'."
+    }
+
+    # Set adapter to new network
+    Set-NetworkAdapter `
+        -NetworkAdapter $adapter `
+        -NetworkName $NetworkName `
+        -Confirm:$false | Out-Null
+
+    # Return updated adapter information
+    return (Get-NetworkAdapter -VM $VMName |
+            Where-Object { $_.Name -eq "Network adapter $AdapterNumber" })
+}
+
 # Export all functions for use in driver
 
-Export-ModuleMember -Function New-VMClone, New-Network, Get-IP, Start-LabVM, Stop-LabVM
+Export-ModuleMember -Function New-VMClone, New-Network, Get-IP, Start-LabVM, Stop-LabVM, Set-Network
