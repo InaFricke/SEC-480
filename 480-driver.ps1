@@ -15,8 +15,14 @@ $SourceVM      = "vyos base"        # target clone
 $SnapshotName  = "baseline"       # Always baseline
 $VMHostName    = "192.168.3.208"  # 192.168.3.208
 $DatastoreName = "datastore2"     # Always datastore2
-$NetworkName   = "Blue1-Network"   # for network connectivity 
+$NetworkName   = "Blue1-Network"   # for network connectivity blue, 480-internal or VM
 $CloneName     = "blueX-fw"
+
+$SwitchName    = "Blue1-Switch"
+$PortGroupName = "Blue1-Network"
+
+$Network1       = "Network1"       # Adapter 1 network (VM Network, 480-internal, Managment Network, Blue1-Network)
+$Network2       = "Network2"       # Adapter 2 network
 
 # Execute Clone Function
 
@@ -35,14 +41,29 @@ New-VMClone `
     -PortGroupName "Blue1-Network" `
     -VMHostName "192.168.3.208"
 
-# Test Get-IP
-Get-IP -VMName "Test-Clone-03"
-
-
 
 # Start VM
-Start-LabVM -VMName "blueX-fw"
+Start-LabVM -VMName $CloneName
 
+# Add second adapter if necessary
+$adapters = Get-NetworkAdapter -VM $CloneName
+if ($adapters.Count -lt 2) {
+    # Add second adapter for adapter 2
+    New-NetworkAdapter -VM $CloneName -NetworkName $Network2 -StartConnected $true
+    Write-Host "Adapter 2 added."
+}
+
+# Set networks
+$networks = @($Network1, $Network2)
+$adapters = Get-NetworkAdapter -VM $CloneName  # Refresh adapters list
+
+for ($i = 0; $i -lt $adapters.Count; $i++) {
+    Set-Network -VMName $CloneName -AdapterNumber ($i + 1) -NetworkName $networks[$i]
+}
+
+# Test Get-IP (and MAC when powered on)
+Get-IP -VMName $CloneName
 
 # Stop VM
-Stop-LabVM -VMName "blueX-fw"
+Stop-LabVM -VMName $CloneName
+
