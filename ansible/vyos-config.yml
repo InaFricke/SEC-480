@@ -1,0 +1,27 @@
+---
+- name: Configure VyOS Firewall
+  hosts: vyos
+  gather_facts: no
+
+  vars_prompt:
+    - name: vyos_password
+      prompt: "Enter new VyOS password"
+      private: yes
+
+  vars_files:
+    - vars.yml
+
+  tasks:
+    - name: Set password hash
+      set_fact:
+        password_hash: "{{ vyos_password | password_hash('sha512') }}"
+
+    - name: Push VyOS config
+      become: yes
+      template:
+        src: config.boot.j2
+        dest: /config/config.boot
+
+    - name: Reboot VyOS
+      become: yes
+      shell: "nohup sh -c 'sleep 2 && reboot' &"
