@@ -1,2 +1,2 @@
-[yovs]
+[vyos]
 10.0.17.200 ansible_user=vyos
