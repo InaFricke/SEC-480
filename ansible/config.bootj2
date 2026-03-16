@@ -1,13 +1,31 @@
 interfaces {
     ethernet eth0 {
-        address dhcp
-        hw-id 00:50:56:8d:8c:0a
+        address {{ wan_ip }}/24
     }
     ethernet eth1 {
-        address 10.0.17.200/24
-        hw-id 00:50:56:8d:72:c4
+        address {{ lan_ip }}/24
     }
     loopback lo {
+    }
+}
+nat {
+    source {
+        rule 10 {
+            outbound-interface eth0
+            source {
+                address {{ lan }}
+            }
+            translation {
+                address masquerade
+            }
+        }
+    }
+}
+protocols {
+    static {
+        route 0.0.0.0/0 {
+            next-hop {{ gateway }}
+        }
     }
 }
 service {
@@ -19,27 +37,11 @@ system {
     config-management {
         commit-revisions 100
     }
-    conntrack {
-        modules {
-            ftp
-            h323
-            nfs
-            pptp
-            sip
-            sqlnet
-            tftp
-        }
-    }
-    console {
-        device ttyS0 {
-            speed 115200
-        }
-    }
-    host-name vyos
+    host-name {{ hostname }}
     login {
         user vyos {
             authentication {
-                encrypted-password $6$44jkh.d7azdY1ngP$BfRg.w7VUPtNpwk2F5SMPL.HnbxFBfvmR2ubERaCJJ2G8nTkAa.dzP/fMxq07LJPFylZh3BVn3FTvYFIuoF8t0
+                encrypted-password "{{ password_hash }}"
                 plaintext-password ""
             }
         }
