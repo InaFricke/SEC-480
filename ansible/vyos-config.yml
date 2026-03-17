@@ -17,11 +17,9 @@
         password_hash: "{{ vyos_password | password_hash('sha512', 'mysalt') }}"
 
     - name: Push VyOS config
-      become: yes
       template:
         src: config.boot.j2
         dest: /config/config.boot
 
     - name: Reboot VyOS
-      become: yes
       shell: "nohup sh -c 'sleep 2 && reboot' &"
