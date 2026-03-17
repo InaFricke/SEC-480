@@ -21,6 +21,11 @@
       template:
         src: config.boot.j2
         dest: /config/config.boot
+        
+    - name: Commit config
+      become: yes
+      shell: "vbash -c 'configure; commit; save'"
+    
 
     - name: Reboot VyOS
       become: yes
