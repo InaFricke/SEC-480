@@ -14,18 +14,13 @@
   tasks:
     - name: Set password hash
       set_fact:
-        password_hash: "{{ vyos_password | password_hash('sha512', 'mysalt' }}"
+        password_hash: "{{ vyos_password | password_hash('sha512', 'mysalt')}}"
 
     - name: Push VyOS config
       become: yes
       template:
         src: config.boot.j2
         dest: /config/config.boot
-        
-    - name: Commit config
-      become: yes
-      shell: "vbash -c 'configure; commit; save'"
-    
 
     - name: Reboot VyOS
       become: yes
