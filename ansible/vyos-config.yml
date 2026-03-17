@@ -14,7 +14,7 @@
   tasks:
     - name: Set password hash
       set_fact:
-        password_hash: "{{ vyos_password | password_hash('sha512') }}"
+        password_hash: "{{ vyos_password | password_hash('sha512', 'mysalt') }}"
 
     - name: Push VyOS config
       become: yes
