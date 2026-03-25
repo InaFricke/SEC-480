@@ -5,6 +5,8 @@
     - name: Set DHCP global local-address
       vyos.vyos.vyos_config:
         lines:
+          - set service dhcp-server global-parameters "local-address 10.0.5.2"
+          - set service dhcp-server shared-network-name BLUE8 authoritative
           - set service dhcp-server shared-network-name BLUE8 authoritative
           - set service dhcp-server shared-network-name BLUE8 subnet 10.0.5.0/24 default-router 10.0.5.2
           - set service dhcp-server shared-network-name BLUE8 subnet 10.0.5.0/24 domain-name blue8.local
