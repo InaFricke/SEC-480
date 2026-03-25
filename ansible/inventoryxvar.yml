@@ -1,0 +1,8 @@
+all:
+  hosts:
+    blue8-fw:
+      ansible_host: 10.0.17.200
+      ansible_user: vyos
+      ansible_password: "vyos"
+      ansible_network_os: vyos
+      ansible_connection: network_cli
