@@ -15,8 +15,3 @@
           - set service dhcp-server shared-network-name BLUE8 subnet 10.0.5.0/24 range BLUE8--POOL start 10.0.5.75
           - set service dhcp-server shared-network-name BLUE8 subnet 10.0.5.0/24 range BLUE8--POOL stop 10.0.5.125
         save: true
-    - name: Verify DHCP config was applied
-      vyos.vyos.vyos_command:
-        commands:
-          - show service dhcp-server
-      register: dhcp_output
