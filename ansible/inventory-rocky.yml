@@ -1,0 +1,13 @@
+all:
+  children:
+    rocky:
+      hosts:
+        rocky-1.2:
+          ansible_host: 10.0.5.77
+          ansible_user: ina
+        rocky-2:
+          ansible_host: 10.0.5.79
+          ansible_user: ina
+        rocky-3:
+          ansible_host: 10.0.5.81
+          ansible_user: ina
