@@ -1,0 +1,45 @@
+---
+- hosts: rocky
+  become: yes
+  gather_facts: no
+
+  vars:
+    static_ips:
+      rocky-1.2: "10.0.5.10"
+      rocky-2: "10.0.5.11"
+      rocky-3: "10.0.5.12"
+
+  tasks:
+    - name: Add deployer user
+      user:
+        name: deployer
+        state: present
+
+    - name: Add public key for deployer
+      authorized_key:
+        user: deployer
+        key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+
+    - name: Create sudoers drop-in for deployer
+      copy:
+        dest: /etc/sudoers.d/deployer
+        content: "deployer ALL=(ALL) NOPASSWD:ALL\n"
+        mode: '0440'
+
+    - name: Set hostname
+      hostname:
+        name: "{{ inventory_hostname }}"
+
+    - name: Set static IP
+      nmcli:
+        conn_name: ens34
+        type: ethernet
+        ip4: "{{ static_ips[inventory_hostname] }}/24"
+        gw4: "10.0.5.2"
+        dns4: "10.0.5.5"
+        state: present
+      notify: reboot
+
+  handlers:
+    - name: reboot
+      reboot:
