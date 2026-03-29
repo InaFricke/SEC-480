@@ -1,0 +1,12 @@
+network:
+  version: 2
+  ethernets:
+    ens160:
+      dhcp4: no
+      addresses:
+        - {{ static_ip }}/24
+      routes:
+        - to: default
+          via: 10.0.5.2
+      nameservers:
+        addresses: [10.0.5.5, 10.0.5.2]
