@@ -153,6 +153,16 @@ function Get-IP {
     }
 }
 
+function Get-IPs {
+    param (
+        [string[]]$VMNames
+    )
+    foreach ($name in $VMNames) {
+        Get-IP -VMName $name
+    }
+}
+
+
 # Function to start a VM by name
 function Start-LabVM {
 
@@ -251,4 +261,4 @@ function Set-Network {
 
 # Export all functions for use in driver
 
-Export-ModuleMember -Function New-VMClone, New-Network, Get-IP, Start-LabVM, Stop-LabVM, Add-NetworkAdapter, Set-Network
+Export-ModuleMember -Function New-VMClone, New-Network, Get-IP, Get-IPs, Start-LabVM, Stop-LabVM, Add-NetworkAdapter, Set-Network
