@@ -16,7 +16,7 @@ $SnapshotName  = "baseline"       # Always baseline
 $VMHostName    = "192.168.3.208"  # 192.168.3.208
 $DatastoreName = "datastore2"     # Always datastore2
 $NetworkName   = "Blue1-Network"   # for network connectivity blue, 480-internal or VM
-$CloneName     = "rocky-2"
+$CloneName     = "rocky-3"
 
 $SwitchName    = "Blue1-Switch"
 $PortGroupName = "Blue1-Network"
