@@ -4,8 +4,8 @@
 Import-Module ./480-utils.psm1 -Force
 
 # Connect to vCenter only if not connected
-Disconnect-VIServer -Server * -Force -Confirm:$false -ErrorAction SilentlyContinue
-Connect-VIServer -Server "vcenter.ina.local" -User "fricke-adm" -Password "RoxiRules32" # Prompts for credentials, if not already connected
+#Disconnect-VIServer -Server * -Force -Confirm:$false -ErrorAction SilentlyContinue
+#Connect-VIServer -Server "vcenter.ina.local" -User "fricke-adm" -Password "RoxiRules32" # Prompts for credentials, if not already connected
 
 
 # Define Clone Parameters (Edit these values as needed)
@@ -16,7 +16,7 @@ $SnapshotName  = "baseline"       # Always baseline
 $VMHostName    = "192.168.3.208"  # 192.168.3.208
 $DatastoreName = "datastore2"     # Always datastore2
 $NetworkName   = "Blue1-Network"   # for network connectivity blue, 480-internal or VM
-$CloneName     = "rocky-1"
+$CloneName     = "rocky-2"
 
 $SwitchName    = "Blue1-Switch"
 $PortGroupName = "Blue1-Network"
@@ -36,16 +36,15 @@ New-VMClone `
     -CloneName $CloneName `
 
 # Create Blue1 Network
- New-Network `
+ <#New-Network `
     -SwitchName "Blue1-Switch" `
     -PortGroupName "Blue1-Network" `
     -VMHostName "192.168.3.208"
-
-
+#>
 # Start VM
 Start-LabVM -VMName $CloneName
 
-# Add second adapter if necessary
+<# Add second adapter if necessary
 $adapters = Get-NetworkAdapter -VM $CloneName
 if ($adapters.Count -lt 2) {
     # Add second adapter for adapter 2
@@ -59,7 +58,7 @@ $adapters = Get-NetworkAdapter -VM $CloneName  # Refresh adapters list
 for ($i = 0; $i -lt $adapters.Count; $i++) {
     Set-Network -VMName $CloneName -AdapterNumber ($i + 1) -NetworkName $networks[$i]
 }
-
+#>
 # Test Get-IP (and MAC when powered on)
 Get-IP -VMName $CloneName
 
