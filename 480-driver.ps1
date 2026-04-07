@@ -11,12 +11,12 @@ Import-Module ./480-utils.psm1 -Force
 # Define Clone Parameters (Edit these values as needed)
 
 $CloneType     = "Linked"         # "Linked" or "Full"
-$SourceVM      = "Rocky Linux Base"        # target clone
+$SourceVM      = "ubuntu.base.server"        # target clone
 $SnapshotName  = "baseline"       # Always baseline
 $VMHostName    = "192.168.3.208"  # 192.168.3.208
 $DatastoreName = "datastore2"     # Always datastore2
 $NetworkName   = "Blue1-Network"   # for network connectivity blue, 480-internal or VM
-$CloneName     = "rocky-3"
+$CloneName     = "ubuntu-2"
 
 $SwitchName    = "Blue1-Switch"
 $PortGroupName = "Blue1-Network"
