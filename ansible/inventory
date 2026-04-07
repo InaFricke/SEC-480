@@ -1,2 +1,4 @@
 [vyos]
 10.0.17.101 ansible_user=vyos
+[wazuh]
+10.0.5.30
