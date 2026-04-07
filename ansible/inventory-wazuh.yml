@@ -1,0 +1,7 @@
+all:
+  children:
+    wazuh:
+      hosts:
+        wazuhhh-server:
+          ansible_host: 10.0.5.30
+          ansible_user: deployer
