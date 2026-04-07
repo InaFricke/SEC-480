@@ -1,0 +1,24 @@
+---
+- name: Install Wazuh Manager
+  hosts: wazuh
+  become: yes
+
+  tasks:
+    - name: Install dependencies
+      apt:
+        name:
+          - curl
+          - apt-transport-https
+        state: present
+        update_cache: yes
+
+    - name: Download Wazuh install script
+      get_url:
+        url: https://packages.wazuh.com/4.7/wazuh-install.sh
+        dest: /tmp/wazuh-install.sh
+        mode: '0755'
+
+    - name: Run Wazuh install script
+      command: bash /tmp/wazuh-install.sh -a
+      args:
+        creates: /var/ossec
