@@ -5,3 +5,8 @@ all:
         wazuhhh-server:
           ansible_host: 10.0.5.30
           ansible_user: deployer
+    rocky:
+      hosts:
+        rocky-3:
+          ansible_host: 10.0.5.12
+          ansible_user: deployer
