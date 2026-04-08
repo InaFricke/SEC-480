@@ -21,7 +21,7 @@
 
     - name: Install Wazuh agent
       yum:
-        name: wazuh-agent
+        name: wazuh-agent-4.9.2-1
         state: present
       environment:
         WAZUH_MANAGER: "10.0.5.30"
