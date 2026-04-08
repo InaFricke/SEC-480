@@ -19,6 +19,6 @@
         mode: '0755'
 
     - name: Run Wazuh install script
-      command: bash /tmp/wazuh-install.sh -a
+      command: bash /tmp/wazuh-install.sh -a --install-dependencies
       args:
         creates: /var/ossec
