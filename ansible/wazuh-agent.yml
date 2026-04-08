@@ -1,0 +1,33 @@
+---
+- name: Install Wazuh Agent
+  hosts: rocky
+  become: yes
+
+  tasks:
+    - name: Import Wazuh GPG key
+      rpm_key:
+        state: present
+        key: https://packages.wazuh.com/key/GPG-KEY-WAZUH
+
+    - name: Add Wazuh repository
+      yum_repository:
+        name: wazuh
+        description: Wazuh repository
+        baseurl: https://packages.wazuh.com/4.x/yum/
+        gpgcheck: yes
+        gpgkey: https://packages.wazuh.com/key/GPG-KEY-WAZUH
+        enabled: yes
+        priority: 1
+
+    - name: Install Wazuh agent
+      yum:
+        name: wazuh-agent
+        state: present
+      environment:
+        WAZUH_MANAGER: "10.0.5.30"
+
+    - name: Enable and start Wazuh agent
+      systemd:
+        name: wazuh-agent
+        enabled: yes
+        state: started
