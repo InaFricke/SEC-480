@@ -259,6 +259,35 @@ function Set-Network {
             Where-Object { $_.Name -eq "Network adapter $AdapterNumber" })
 }
 
+# Sets a static IP configuration on a Windows VM using Invoke-VMScript and netsh
+function Set-WindowsIP {
+
+    param (
+        [string]$VMName,          # Name of the VM
+        [string]$IPAddress,       # Static IP address
+        [string]$SubnetMask,      # Subnet mask
+        [string]$Gateway,         # Default gateway
+        [string]$DNS,             # DNS server
+        [string]$GuestUser,       # Guest OS username
+        [string]$GuestPassword,   # Guest OS password
+        [string]$Interface        # Network interface name
+    )
+
+    # Build netsh commands to set static IP and DNS
+    $script = @"
+netsh interface ip set address name="$Interface" static $IPAddress $SubnetMask $Gateway
+netsh interface ip set dns servers name="$Interface" static $DNS
+"@
+
+    # Execute script inside the guest OS
+    Invoke-VMScript `
+        -VM $VMName `
+        -ScriptText $script `
+        -GuestUser $GuestUser `
+        -GuestPassword $GuestPassword `
+        -ScriptType Bat
+}
+
 # Export all functions for use in driver
 
-Export-ModuleMember -Function New-VMClone, New-Network, Get-IP, Get-IPs, Start-LabVM, Stop-LabVM, Add-NetworkAdapter, Set-Network
+Export-ModuleMember -Function New-VMClone, New-Network, Get-IP, Get-IPs, Start-LabVM, Stop-LabVM, Add-NetworkAdapter, Set-Network, Set-WindowsIP
