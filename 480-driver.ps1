@@ -3,7 +3,7 @@
 
 Import-Module ./480-utils.psm1 -Force
 
-# Connect to vCenter only if not connected
+<# Connect to vCenter only if not connected
 #Disconnect-VIServer -Server * -Force -Confirm:$false -ErrorAction SilentlyContinue
 #Connect-VIServer -Server "vcenter.ina.local" -User "fricke-adm" -Password "RoxiRules32" # Prompts for credentials, if not already connected
 
@@ -36,14 +36,12 @@ New-VMClone `
     -CloneName $CloneName `
 
 # Create Blue1 Network
- <#New-Network `
+    New-Network `
     -SwitchName "Blue1-Switch" `
     -PortGroupName "Blue1-Network" `
     -VMHostName "192.168.3.208"
-#>
-# Start VM
-Start-LabVM -VMName $CloneName
 
+#>
 <# Add second adapter if necessary
 $adapters = Get-NetworkAdapter -VM $CloneName
 if ($adapters.Count -lt 2) {
@@ -61,7 +59,24 @@ for ($i = 0; $i -lt $adapters.Count; $i++) {
 #>
 # Test Get-IP (and MAC when powered on)
 Get-IP -VMName $CloneName
-
+# Start VM
+#Start-LabVM -VMName $CloneName
 # Stop VM
 #Stop-LabVM -VMName $CloneName
+
+
+# Prompt for guest password securely
+$securePass = Read-Host "Enter guest password" -AsSecureString
+# Convert to credential object
+$cred = New-Object System.Net.NetworkCredential("deployer", $securePass)
+# Sets static IP on dc-blue8
+Set-WindowsIP `
+    -VMName $CloneName `
+    -IPAddress "10.0.5.5" `
+    -SubnetMask "255.255.255.0" `
+    -Gateway "10.0.5.2" `
+    -DNS "10.0.5.5" `
+    -GuestUser $cred.UserName `
+    -GuestPassword $cred.Password `
+    -Interface "Ethernet0"
 
